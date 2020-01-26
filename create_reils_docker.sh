@@ -97,6 +97,9 @@ echo "    # バインドするIPアドレス：0.0.0.0" | tee -a $DEBUGCOMPOSEFI
 echo "    # ポート3000が来たらrailsサーバーが応答" | tee -a $DEBUGCOMPOSEFILE >> $COMPOSEFILE
 echo "    command: [ \"bash\", \"-c\", \"rm -f tmp/pids/server.pid; RAILS_ENV=development bundle exec rdebug-ide --host 0.0.0.0 --port 1234 --dispatcher-port 26162 -- bin/rails s -b 0.0.0.0\" ]" >> $DEBUGCOMPOSEFILE
 echo "    command: [ \"bash\", \"-c\", \"rm -f tmp/pids/server.pid; RAILS_ENV=development bundle exec rails s -p 3000 -b '0.0.0.0'\" ]" >> $COMPOSEFILE
+echo "    environment:" | tee -a $DEBUGCOMPOSEFILE >> $COMPOSEFILE
+echo "      WEBPACKER_DEV_SERVER_HOST: webpacker" | tee -a $DEBUGCOMPOSEFILE >> $COMPOSEFILE
+echo "      WEBPACKER_DEV_SERVER_PUBLIC: 0.0.0.0:3035" | tee -a $DEBUGCOMPOSEFILE >> $COMPOSEFILE
 echo "    # ローカルのsrcをコンテナにマウント" | tee -a $DEBUGCOMPOSEFILE >> $COMPOSEFILE
 echo "    volumes:" | tee -a $DEBUGCOMPOSEFILE >> $COMPOSEFILE
 echo "      - ./src:/$APPNAME" | tee -a $DEBUGCOMPOSEFILE >> $COMPOSEFILE
@@ -109,14 +112,15 @@ echo "      - 26162:26162" >> $DEBUGCOMPOSEFILE
 echo "    # dbとwebpackerを先に起動" | tee -a $DEBUGCOMPOSEFILE >> $COMPOSEFILE
 echo "    depends_on:" | tee -a $DEBUGCOMPOSEFILE >> $COMPOSEFILE
 echo "      - db" | tee -a $DEBUGCOMPOSEFILE >> $COMPOSEFILE
-echo "      - webpacker" | tee -a $DEBUGCOMPOSEFILE >> $COMPOSEFILE
 echo "    # pryを使用してデバッグができるよう設定" >> $DEBUGCOMPOSEFILE
 echo "    tty: true" >> $DEBUGCOMPOSEFILE
 echo "    stdin_open: true" >> $DEBUGCOMPOSEFILE
 echo "  # webpacker" | tee -a $DEBUGCOMPOSEFILE >> $COMPOSEFILE
 echo "  webpacker:" | tee -a $DEBUGCOMPOSEFILE >> $COMPOSEFILE
 echo "    build: ." | tee -a $DEBUGCOMPOSEFILE >> $COMPOSEFILE
-echo "    command: [ "bash", "-c", 'rm -rf /$APPNAME/public/packs; /$APPNAME/bin/webpack-dev-server']" | tee -a $DEBUGCOMPOSEFILE >> $COMPOSEFILE 
+echo "    command: [ "bash", "-c", 'rm -rf /$APPNAME/public/packs; /$APPNAME/bin/webpack-dev-server']" | tee -a $DEBUGCOMPOSEFILE >> $COMPOSEFILE
+echo "    environment:" | tee -a $DEBUGCOMPOSEFILE >> $COMPOSEFILE
+echo "      - WEBPACKER_DEV_SERVER_HOST=0.0.0.0" | tee -a $DEBUGCOMPOSEFILE >> $COMPOSEFILE
 echo "    volumes:" | tee -a $DEBUGCOMPOSEFILE >> $COMPOSEFILE
 echo "     - ./src:/$APPNAME" | tee -a $DEBUGCOMPOSEFILE >> $COMPOSEFILE
 echo "    ports:" | tee -a $DEBUGCOMPOSEFILE >> $COMPOSEFILE
@@ -124,6 +128,8 @@ echo "     - 3035:3035" | tee -a $DEBUGCOMPOSEFILE >> $COMPOSEFILE
 echo "    networks:" | tee -a $DEBUGCOMPOSEFILE >> $COMPOSEFILE
 echo "     - docker-network" | tee -a $DEBUGCOMPOSEFILE >> $COMPOSEFILE
 echo "    restart: always" | tee -a $DEBUGCOMPOSEFILE >> $COMPOSEFILE
+echo "    depends_on:" | tee -a $DEBUGCOMPOSEFILE >> $COMPOSEFILE
+echo "         - web" | tee -a $DEBUGCOMPOSEFILE >> $COMPOSEFILE
 echo "  # MySQLコンテナ定義" | tee -a $DEBUGCOMPOSEFILE >> $COMPOSEFILE
 echo "  db:" | tee -a $DEBUGCOMPOSEFILE >> $COMPOSEFILE
 echo "    # mysql8.0でコンテナ作成" | tee -a $DEBUGCOMPOSEFILE >> $COMPOSEFILE
