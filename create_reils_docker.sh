@@ -170,7 +170,7 @@ echo "##############################"
 echo 
 echo
 
-docker-compose run --rm webpacker rails new $APPNAME --force --database=mysql --webpack=react
+docker-compose run --rm web rails new $APPNAME --force --database=mysql --webpack=react
 
 echo 
 echo
@@ -189,7 +189,7 @@ echo "##############################"
 echo "gem 'ruby-debug-ide'" >> src/$APPNAME/Gemfile 
 echo "gem 'debase'" >> src/$APPNAME/Gemfile
 
-docker-compose run --rm webpacker bundle install
+docker-compose run --rm web bundle install
 
 
 echo 
@@ -207,7 +207,7 @@ echo "##############################"
 echo "START Install npm lib"
 echo "##############################"
 
-docker-compose run --rm webpacker npm install --prefix ./$APPNAME --save ./$APPNAME  connected-react-router react-router-dom redux unstated
+docker-compose run --rm web npm install --prefix ./$APPNAME --save ./$APPNAME  connected-react-router react-router-dom redux unstated
 
 echo 
 echo
